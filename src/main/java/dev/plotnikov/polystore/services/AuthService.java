@@ -38,13 +38,13 @@ public class AuthService {
         User user = getUserFromToken(refresh_token);
         String username = user.getUsername();
         List<String> roles = user.getRoles().stream().map(Role::getName).toList();
-        return createAccessTokenWithUser(accessExpirationInstant, username, roles, request);
+        return createAccessTokenWithUser(accessExpirationInstant, username, roles, request.getRequestURL().toString());
     }
-    public String createAccessTokenWithUser(Instant accessExpirationInstant, String username, List<String> roles, HttpServletRequest request) {
+    public String createAccessTokenWithUser(Instant accessExpirationInstant, String username, List<String> roles, String url) {
         return JWT.create()
                 .withSubject(username)
                 .withExpiresAt(Date.from(accessExpirationInstant))
-                .withIssuer(request.getRequestURL().toString())
+                .withIssuer(url)
                 .withClaim("roles", roles)
                 .sign(algorithm);
     }

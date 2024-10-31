@@ -50,7 +50,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         User user = (User) authentication.getPrincipal();
         String username = user.getUsername();
         List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        String access_token = authService.createAccessTokenWithUser(accessExpirationInstant, username, roles, request);
+        String access_token = authService.createAccessTokenWithUser(accessExpirationInstant, username, roles, request.getRequestURL().toString());
         final Instant refreshExpirationInstant = now.plusDays(30).atZone(ZoneId.systemDefault()).toInstant();
         String refresh_token = authService.createRefreshToken(refreshExpirationInstant, username, request);
 

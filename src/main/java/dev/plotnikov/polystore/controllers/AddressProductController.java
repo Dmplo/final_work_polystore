@@ -45,7 +45,7 @@ public class AddressProductController {
             description = "Получить адрес с указанием количества хранящихся продуктов по идентификатору",
             responses = {
                     @ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = Pam.class))),
-                    @ApiResponse(description = "Пам не найден", responseCode = "404", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+                    @ApiResponse(description = "Адрес не найден", responseCode = "404", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
                     @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
             }
     )

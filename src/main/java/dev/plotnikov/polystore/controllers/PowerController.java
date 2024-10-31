@@ -44,7 +44,7 @@ public class PowerController {
             description = "Получить мощность по идентификатору",
             responses = {
                     @ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = Power.class))),
-                    @ApiResponse(description = "Пам не найден", responseCode = "404", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+                    @ApiResponse(description = "Мощность не найдена", responseCode = "404", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
                     @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
             }
     )
