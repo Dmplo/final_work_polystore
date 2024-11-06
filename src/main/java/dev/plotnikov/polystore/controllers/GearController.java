@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.plotnikov.polystore.entities.DTOs.ConcatGearNameDTO;
 import dev.plotnikov.polystore.entities.DTOs.SearchProductNameDTO;
 import dev.plotnikov.polystore.entities.Gear;
+import dev.plotnikov.polystore.entities.IsCheckName;
 import dev.plotnikov.polystore.services.GearService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,5 +57,18 @@ public class GearController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(gear));
     }
 
-
+    @Operation(
+            summary = "Check gear name",
+            description = "Проверить что такой редуктор не создан",
+            responses = {
+                    @ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = IsCheckName.class))),
+                    @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
+            }
+    )
+    @PostMapping("/checkname")
+    public ResponseEntity<IsCheckName> isExistsGear(@RequestBody Gear gear) {
+        IsCheckName isCheckName = new IsCheckName();
+        isCheckName.setIsExists(service.checkGearName(gear));
+        return ResponseEntity.ok(isCheckName);
+    }
 }

@@ -76,7 +76,6 @@ public class UserController {
             description = "Проверить что логин не занят",
             responses = {
                     @ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = IsCheckName.class))),
-                    @ApiResponse(description = "Пользователь не найден", responseCode = "404", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
                     @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
             }
     )

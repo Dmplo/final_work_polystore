@@ -50,15 +50,33 @@ public class ReserveService {
         return repository.findAll();
     }
 
-    public ReserveDTO create(Reserve reserve) {
-        List<CalcMainDTO> qtyList = service.calcQtyProductsByAddressId(reserve.getAddressProduct().getId());
+    private void checkAllowedQty(Reserve reserve) {
+        Long addressProductId = reserve.getAddressProduct().getId();
+        List<CalcMainDTO> qtyList = service.calcQtyProductsByAddressId(addressProductId);
         if (!qtyList.isEmpty()) {
             CalcMainDTO result = qtyList.get(0);
             int total = result.getQty() - (result.getAllReserveQty() + reserve.getQty());
             if (total < 0) {
                 throw new IllegalArgumentException("Недостаточно свободных остатков для резервирования");
             }
+        } else {
+            service.findByIdSimple(addressProductId)
+                    .ifPresentOrElse(
+                            item -> {
+                                int total = item.getQty() - reserve.getQty();
+                                if (total < 0) {
+                                    throw new IllegalArgumentException("Недостаточно свободных остатков для резервирования");
+                                }
+                            },
+                            () -> {
+                                throw new NoSuchElementException("Продукта по адресу хранения с id = " + addressProductId + " не существует!");
+                            });
+
         }
+    }
+
+    public ReserveDTO create(Reserve reserve) {
+        checkAllowedQty(reserve);
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.getUserByUsername(name);
         reserve.setUser(user);

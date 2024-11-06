@@ -3,11 +3,13 @@ package dev.plotnikov.polystore.repositories;
 import dev.plotnikov.polystore.entities.DTOs.ConcatEngineNameDTO;
 import dev.plotnikov.polystore.entities.DTOs.SearchProductNameDTO;
 import dev.plotnikov.polystore.entities.Engine;
+import dev.plotnikov.polystore.entities.Gear;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EngineRepository extends JpaRepository<Engine, Long> {
@@ -111,6 +113,18 @@ public interface EngineRepository extends JpaRepository<Engine, Long> {
               and LOWER( n.name ) LIKE '%' || :paramFive || '%'
               """)
     List<SearchProductNameDTO> findByFiveParams(String paramOne, String paramTwo, String paramThree, String paramFour, String paramFive);
+
+    @Query(nativeQuery = true, value = """
+            select *
+              from products as p
+              where p.name = :name
+              and p.type_id = :typeId
+              and p.size_id = :sizeId
+              and p.power_id = :powerId
+              and p.speed_id = :speedId
+              and p.flange_id = :flangeId
+              """)
+    Optional<Engine> checkEngineName(String name, Long typeId, Long sizeId, Long powerId, Long speedId, Long flangeId);
 }
 
 ;

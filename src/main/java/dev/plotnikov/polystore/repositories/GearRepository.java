@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GearRepository extends JpaRepository<Gear, Long> {
@@ -90,7 +91,7 @@ public interface GearRepository extends JpaRepository<Gear, Long> {
             select n.name as name, pr.id as id
               from products as pr
               join (
-                    select CONCAT(p.name, ' ', s.name, ' ', p.ratio, ' ',pams.name, '/',f.name) as name, p.id as id
+                    select CONCAT(p.name, ' ', s.name, ' ', p.ratio, ' ', pams.name, '/', f.name) as name, p.id as id
                     from products as p
                     left join sizes as s on s.id = p.size_id
                     left join flanges as f on f.id = p.flange_id
@@ -105,6 +106,16 @@ public interface GearRepository extends JpaRepository<Gear, Long> {
               """)
     List<SearchProductNameDTO> searchByFiveParams(String paramOne, String paramTwo, String paramThree, String paramFour, String paramFive);
 
-}
+    @Query(nativeQuery = true, value = """
+            select *
+              from products as p
+              where p.name = :name
+              and p.type_id = :typeId
+              and p.size_id = :sizeId
+              and p.ratio = :ratio
+              and p.pam_id = :pamId
+              and p.flange_id = :flangeId
+              """)
+    Optional<Gear> checkGearName(String name, Long typeId, Long sizeId, Double ratio, Long pamId, Long flangeId);
 
-;
+}

@@ -4,6 +4,7 @@ import dev.plotnikov.polystore.controllers.exceptions.ExceptionResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,6 +24,13 @@ public class ExceptionController {
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e) {
         ExceptionResponse exceptionResponse = new ExceptionResponse();
         exceptionResponse.setReason(e.getMessage());
+        return ResponseEntity.badRequest().body(exceptionResponse);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(MethodArgumentNotValidException e) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setReason(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         return ResponseEntity.badRequest().body(exceptionResponse);
     }
 

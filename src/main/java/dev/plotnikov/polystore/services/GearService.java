@@ -35,6 +35,11 @@ public class GearService {
         return repository.getConcatNameById(id);
     }
 
+    public Boolean checkGearName(Gear gear) {
+        return repository.checkGearName(gear.getName(), gear.getType().getId(), gear.getSize().getId(), gear.getRatio(), gear.getPam().getId(), gear.getFlange().getId()).isPresent();
+    }
+
+
     public List<SearchProductNameDTO> searchByParams(Map<String, String> map) {
         switch (map.size()) {
             case 1:

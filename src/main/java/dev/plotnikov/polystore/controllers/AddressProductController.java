@@ -1,16 +1,19 @@
 package dev.plotnikov.polystore.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import dev.plotnikov.polystore.controllers.exceptions.ExceptionResponse;
 import dev.plotnikov.polystore.entities.AddressProduct;
 import dev.plotnikov.polystore.entities.DTOs.AddressProductDTO;
 import dev.plotnikov.polystore.entities.DTOs.AddressProductPageDTO;
 import dev.plotnikov.polystore.entities.Pam;
 import dev.plotnikov.polystore.services.AddressProductService;
+import dev.plotnikov.polystore.util.Views;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -59,11 +62,13 @@ public class AddressProductController {
             description = "Разместить продукт на полку с адресом или увеличить количество уже размещенного продукта",
             responses = {
                     @ApiResponse(description = "Продукт успешно размещен", responseCode = "201", content = @Content(schema = @Schema(implementation = AddressProduct.class))),
+                    @ApiResponse(description = "Ошибка валидации", responseCode = "400", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
                     @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
             }
     )
     @PostMapping("/add")
-    public ResponseEntity<AddressProduct> findOrCreate(@RequestBody AddressProduct addressProduct) {
+    @JsonView(Views.MinParams.class)
+    public ResponseEntity<AddressProduct> findOrCreate(@Valid @RequestBody AddressProduct addressProduct) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.findOrCreate(addressProduct));
     }
 

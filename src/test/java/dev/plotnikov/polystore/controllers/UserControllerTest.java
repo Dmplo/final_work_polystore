@@ -142,7 +142,6 @@ public class UserControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         User responseBody = response.getBody();
-        System.out.println(responseBody);
         assertNotNull(responseBody);
         assertNotNull(responseBody.getId());
         assertEquals(responseBody.getFirstname(), toUpdate.getFirstname());

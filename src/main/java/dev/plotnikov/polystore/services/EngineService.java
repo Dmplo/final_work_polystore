@@ -3,6 +3,7 @@ package dev.plotnikov.polystore.services;
 import dev.plotnikov.polystore.entities.DTOs.ConcatEngineNameDTO;
 import dev.plotnikov.polystore.entities.DTOs.SearchProductNameDTO;
 import dev.plotnikov.polystore.entities.Engine;
+import dev.plotnikov.polystore.entities.Gear;
 import dev.plotnikov.polystore.repositories.EngineRepository;
 import dev.plotnikov.polystore.util.EventType;
 import dev.plotnikov.polystore.util.ObjectType;
@@ -29,6 +30,10 @@ public class EngineService {
         final ConcatEngineNameDTO name = getConcatNameById(created.getId());
         wsSenderConcatName.accept(EventType.CREATE, name);
         return name;
+    }
+
+    public Boolean checkEngineName(Engine engine) {
+        return repository.checkEngineName(engine.getName(), engine.getType().getId(), engine.getSize().getId(), engine.getPower().getId(), engine.getSpeed().getId(), engine.getFlange().getId()).isPresent();
     }
 
     public ConcatEngineNameDTO getConcatNameById(Long id) {

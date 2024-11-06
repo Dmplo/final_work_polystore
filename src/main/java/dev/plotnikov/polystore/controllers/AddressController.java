@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,11 +60,13 @@ public class AddressController {
             description = "Создать адрес",
             responses = {
                     @ApiResponse(description = "Успешно создан", responseCode = "201", content = @Content(schema = @Schema(implementation = Address.class))),
+                    @ApiResponse(description = "Ошибка валидации", responseCode = "400", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
                     @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
             }
     )
     @PostMapping("/save")
-    public ResponseEntity<Address> create(@RequestBody Address address) {
+    @JsonView(Views.MinParams.class)
+    public ResponseEntity<Address> create(@Valid @RequestBody Address address) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(address));
     }
 
@@ -72,7 +75,6 @@ public class AddressController {
             description = "Проверить что название адреса не занято",
             responses = {
                     @ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = IsCheckName.class))),
-                    @ApiResponse(description = "Название адреса не найдено", responseCode = "404", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
                     @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
             }
     )

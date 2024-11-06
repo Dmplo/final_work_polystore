@@ -1,15 +1,18 @@
 package dev.plotnikov.polystore.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import dev.plotnikov.polystore.controllers.exceptions.ExceptionResponse;
 import dev.plotnikov.polystore.entities.DTOs.ReserveDTO;
 import dev.plotnikov.polystore.entities.Reserve;
 import dev.plotnikov.polystore.entities.User;
 import dev.plotnikov.polystore.services.ReserveService;
+import dev.plotnikov.polystore.util.Views;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +31,14 @@ public class ReserveController {
             description = "Создать резерв",
             responses = {
                     @ApiResponse(description = "Успешно создан", responseCode = "201", content = @Content(schema = @Schema(implementation = ReserveDTO.class))),
-                    @ApiResponse(description = "Резерв не найден", responseCode = "404", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
+                    @ApiResponse(description = "Ошибка валидации", responseCode = "400", content = @Content(schema = @Schema(implementation = ExceptionResponse.class))),
                     @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
             }
     )
     @PostMapping("/save")
-    public ResponseEntity<ReserveDTO> create(@RequestBody Reserve reserve) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(reserve));
+    public ResponseEntity<ReserveDTO> create(@Valid @RequestBody Reserve reserve) {
+        ReserveDTO rd = service.create(reserve);
+        return ResponseEntity.status(HttpStatus.CREATED).body(rd);
     }
 
     @Operation(

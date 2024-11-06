@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import dev.plotnikov.polystore.entities.DTOs.ConcatEngineNameDTO;
 import dev.plotnikov.polystore.entities.DTOs.SearchProductNameDTO;
 import dev.plotnikov.polystore.entities.Engine;
+import dev.plotnikov.polystore.entities.Gear;
+import dev.plotnikov.polystore.entities.IsCheckName;
 import dev.plotnikov.polystore.services.EngineService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -56,4 +58,18 @@ public class EngineController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(engine));
     }
 
+    @Operation(
+            summary = "Check engine name",
+            description = "Проверить что такой двигатель не создан",
+            responses = {
+                    @ApiResponse(description = "Успешный ответ", responseCode = "200", content = @Content(schema = @Schema(implementation = IsCheckName.class))),
+                    @ApiResponse(description = "Внутренняя ошибка", responseCode = "500", content = @Content(schema = @Schema()))
+            }
+    )
+    @PostMapping("/checkname")
+    public ResponseEntity<IsCheckName> isExistsGear(@RequestBody Engine engine) {
+        IsCheckName isCheckName = new IsCheckName();
+        isCheckName.setIsExists(service.checkEngineName(engine));
+        return ResponseEntity.ok(isCheckName);
+    }
 }

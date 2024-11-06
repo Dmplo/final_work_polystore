@@ -63,7 +63,7 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username)
+        return repository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
     }
 

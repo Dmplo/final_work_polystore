@@ -106,7 +106,7 @@ public class AddressProductService {
     }
 
     @JsonView(Views.MinParams.class)
-    private Optional<AddressProduct> findByIdSimple(Long id) {
+    public Optional<AddressProduct> findByIdSimple(Long id) {
         return repository.findById(id);
     }
 

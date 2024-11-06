@@ -1,6 +1,7 @@
 package dev.plotnikov.polystore.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,6 +30,7 @@ public class Reserve {
   private LocalDate updatedAt;
 
   @Column(nullable = false)
+  @Min(value = 1, message = "Количество должно быть не меньше 1")
   private int qty;
 
   private String comment;

@@ -3,6 +3,7 @@ package dev.plotnikov.polystore.entities;
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.plotnikov.polystore.util.Views;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -38,6 +39,7 @@ public class Address {
 
     @Column(nullable = false)
     @JsonView(Views.MinParams.class)
+    @Min(value = 1, message = "Количество ярусов должно быть не меньше 1")
     private int capacity;
 
     @OneToMany(
